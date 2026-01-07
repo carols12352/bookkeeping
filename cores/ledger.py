@@ -1,4 +1,4 @@
-from structure import datastruct
+from .structure import datastruct
 class Ledger:
     def __init__(self):
         self.transactions = []
@@ -10,4 +10,8 @@ class Ledger:
         return self.transactions
     
     def delete(self, index: int):
-        del self.transactions[index]
+        for tx in self.transactions:
+            if tx.id == index:
+                self.transactions.remove(tx)
+                return True
+        return False
