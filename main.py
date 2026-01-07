@@ -1,15 +1,15 @@
-import typer
-from typing import Optional
-from cores.ledger import Ledger
-from cores.structure import datastruct
 from datetime import date
 
+import typer
+
+from cores.ledger import Ledger
+from cores.structure import datastruct
+
 app = typer.Typer()
-ledger = Ledger()
+ledger = Ledger("data.db")
 
 @app.command()
 def add_transaction():
-    id = input("Enter transaction ID: ")
     amount = float(input("Enter amount: "))
     type = input("Enter type (income/expense): ")
     category = input("Enter category: ")
@@ -17,8 +17,9 @@ def add_transaction():
     date_input = input("Enter date (YYYY-MM-DD) or leave blank for today: ")
     if date_input:
         tx_date = date.fromisoformat(date_input)
-    tx_date = date or date.today()
-    tx = datastruct(id=id, amount=amount, type=type, category=category, note=note, date=tx_date)
+    else:
+        tx_date = date.today()
+    tx = datastruct(id=None, amount=amount, type=type, category=category, note=note, date=tx_date)
     ledger.add(tx)
 
 @app.command()
@@ -28,12 +29,12 @@ def list_transactions():
         print(tx)
 
 @app.command()
-def delete_transaction(id: int):
-    success = ledger.delete(id)
+def delete_transaction(tx_id: int):
+    success = ledger.delete(tx_id)
     if success:
-        print(f"Transaction with id {id} deleted.")
+        print(f"Transaction with id {tx_id} deleted.")
     else:
-        print(f"Transaction with id {id} not found.")
+        print(f"Transaction with id {tx_id} not found.")
 
 if __name__ == "__main__":
     app()
