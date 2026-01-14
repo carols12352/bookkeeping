@@ -4,7 +4,7 @@ from typing import Optional
 
 
 @dataclass
-class datastruct:
+class Transaction:
     id: Optional[int]
     amount: float
     type: str
